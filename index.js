@@ -28,13 +28,14 @@ async function run() {
             res.send(result);
         });
 
-        //POST API
-        // app.post('/offers/byKeys', async (req, res) => {
-        //     const keys = req.body;
-        //     const query = { key: { $in: keys } };
-        //     const products = await offersCollection.find(query).toArray();
-        //     res.json(products);
-        // });
+        // find one offer
+        app.get('/allOffers/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const user = await offersCollection.findOne(query);
+            console.log('Find with id', id);
+            res.send(user);
+        });
 
         // add offers api
         app.post('/offers', async (req, res) => {
@@ -68,7 +69,7 @@ async function run() {
             res.send(result);
         });
 
-        // my booking
+        // get myBooking
         app.get("/myBooking/:email", async (req, res) => {
             const result = await bookingCollection.find({
                 email: req.params.email,
@@ -76,7 +77,7 @@ async function run() {
             res.send(result);
         });
 
-        // update api
+        // update myBooking
         app.put('/myBooking/:id', async (req, res) => {
             const id = req.params.id;
             const updateBooking = req.body;
@@ -99,7 +100,7 @@ async function run() {
             res.json(result);
         })
 
-        // Delete Offer
+        // Delete myBooking
         app.delete("/myBooking/:id", async (req, res) => {
             console.log(req.params.id);
             const result = await bookingCollection.deleteOne({
