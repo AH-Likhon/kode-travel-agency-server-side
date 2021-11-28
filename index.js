@@ -60,6 +60,33 @@ async function run() {
             res.json(result);
         });
 
+        // Delete/remove single booking
+        app.delete("/booking/:id", async (req, res) => {
+            console.log(req.params.id);
+            const result = await bookingCollection.deleteOne({
+                _id: ObjectId(req.params.id),
+            });
+            res.send(result);
+        });
+
+        // update a single order
+        app.put('/booking/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: "Approved",
+                },
+            };
+            const result = await bookingCollection.updateOne(filter, updateDoc, options);
+
+            console.log('Updating id', id);
+            // console.log(req.body);
+            res.json(result);
+        })
+
         // Delete Offer
         app.delete("/allOffers/:id", async (req, res) => {
             console.log(req.params.id);
@@ -108,6 +135,7 @@ async function run() {
             });
             res.send(result);
         });
+
     }
     finally {
         // await client.close();
